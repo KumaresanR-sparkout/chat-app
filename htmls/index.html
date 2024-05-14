@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>socket.io</title>
+
+</head>
+
+<body>
+    <h1>socket.io chat</h1>
+    <form action="" onsubmit="sendMessage(event)">
+        <div>
+            <label for="">username</label>
+            <br>
+            <input type="text" id="username" required>
+        </div>
+        <br>
+        <div>
+            <label for="">message</label>
+            <br>
+            <input type="text" id="message" autocomplete="off">
+        </div>
+        <br>
+        <div>
+            <button>send</button>
+        </div>
+    </form>
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./index.js">
+
+    </script>
+
+</body>
+
+</html>
