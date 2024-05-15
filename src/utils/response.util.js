@@ -5,7 +5,7 @@ export const sendSuccess=(res,status_code,message,data)=>{
         "message":message,
         "data":data
     }
-    res.send(status_code).json(response)
+    res.status(status_code).json(response)
 }
 
 export const sendError=(res,status_code,message)=>{
@@ -14,5 +14,5 @@ export const sendError=(res,status_code,message)=>{
         "status":false,
         "message":message
     }
-    res.send(status_code).json(response)
+    res.status(status_code).json(response)
 }
