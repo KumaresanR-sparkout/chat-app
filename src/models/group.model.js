@@ -5,7 +5,12 @@ const groupSchema = new mongoose.Schema({
         type: String,
         trim: true,
         default: 'lik'
+    },
+    date:{
+        type:Date,
+        default:new Date()
     }
+    
 })
 
 export default mongoose.model('Groups', groupSchema)

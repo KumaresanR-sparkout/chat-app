@@ -13,6 +13,10 @@ const groupUserSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: true
+    },
+    createdAt: {
+        type: Date,
+        default: new Date()
     }
 })
 
