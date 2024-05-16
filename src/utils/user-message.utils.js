@@ -1,12 +1,12 @@
-import Chats from '../models/chat.model'
-export const saveUserMessage = async (senderId,receiverID,message) => {
+import Chats from '../models/sender-chat.model'
+export const saveUserMessage = async (senderId, receiverID, message) => {
     try {
-        const Message={
-            "sender_id":senderId,
-            "receiver_id":receiverID,
-            "message":message
+        const Message = {
+            "sender_id": senderId,
+            "receiver_id": receiverID,
+            "message": message
         }
-        const saveUserMessage=await Chats(Message).save()
+        const saveUserMessage = await Chats(Message).save()
         console.log(saveUserMessage)
         return true
     }

@@ -1,9 +1,9 @@
 import { saveGroupMessage } from '../utils/group-message.utils'
 
 const groupRooms = {}
-export const groupMessage = async (userid, groupkey, socket) => {
-    const userId = userid
-    const groupKey = groupkey
+export const groupMessage = async (socket) => {
+    const userId = socket.handshake.query.userId
+    const groupKey = socket.handshake.headers['x-group-key']
     console.log(groupKey)
     if (userId && groupKey) {
         const key = Object.keys(groupRooms)
@@ -16,15 +16,15 @@ export const groupMessage = async (userid, groupkey, socket) => {
     }
     console.log(groupRooms)
     socket.on('groupChat', async (msg) => {
-        const response=await saveGroupMessage(groupKey,userId,msg.message)
-        if(response){
-            socket.broadcast.to(groupRooms[groupKey])
-            .emit('groupMessage', msg)
+        const response = await saveGroupMessage(groupKey, userId, msg.message)
+        if (response) {
+            socket.to(groupRooms[groupKey])
+                .emit('groupMessage', msg)
         }
-        else{
+        else {
             socket.emit('error', 'message is in queue not sent to user')
         }
 
-        
+
     })
 }

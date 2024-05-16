@@ -1,4 +1,4 @@
-import Groupusers from '../models/grouUser.model'
+import Groupusers from '../models/groupUser.model'
 
 export const saveGroupMessage = async (group_id, sender_id, message) => {
     try {

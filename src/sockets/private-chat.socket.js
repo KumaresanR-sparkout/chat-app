@@ -1,7 +1,7 @@
 import { saveUserMessage } from '../utils/user-message.utils'
 const user = {}
-export const privateMessage = (userid, socket) => {
-    const userId = userid
+export const privateMessage = (socket) => {
+    const userId = socket.handshake.query.userId
     if (userId) {
         const key = Object.keys(user)
         if (key.includes(userId)) {
@@ -17,7 +17,7 @@ export const privateMessage = (userid, socket) => {
         const { receiver_id, message } = msg
         const response = await saveUserMessage(userId, receiver_id, message)
         if (response) {
-            socket.broadcast.to(user[receiver_id]).emit('rechat', message)
+            socket.to(user[receiver_id]).emit('rechat', message)
             console.log(msg)
         }
         else {

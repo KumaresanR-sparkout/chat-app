@@ -6,11 +6,11 @@ const groupSchema = new mongoose.Schema({
         trim: true,
         default: 'lik'
     },
-    date:{
-        type:Date,
-        default:new Date()
+    date: {
+        type: Date,
+        default: new Date()
     }
-    
+
 })
 
 export default mongoose.model('Groups', groupSchema)
