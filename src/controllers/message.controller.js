@@ -4,7 +4,12 @@ import * as response from '../utils/response.util'
 
 export const privateMessage = async (req, res) => {
     try {
+
+        if (!req.query) {
+            return response.sendError(res, 400, "bad request")
+        }
         const array = [req.query.senderId, req.query.receiverId]
+
         const message = await Message.find()
             .populate({ path: 'chat_ref', select: { 'createdAt': 0, 'updatedAt': 0 }, populate: { path: 'users', select: { 'user_name': 1 } } })
             .then(data => data.filter(data => {
@@ -21,6 +26,11 @@ export const privateMessage = async (req, res) => {
 
 export const groupMessage = async (req, res) => {
     try {
+
+        if (!req.params) {
+            return response.sendError(res, 400, "bad request")
+        }
+
         const message = await GroupMessage.find()
             .populate({ path: 'group_id', select: { "__v": 0 } })
             .populate({ path: 'sender_id', select: { 'user_name': 1 }, options: { strictPopulate: false } })
