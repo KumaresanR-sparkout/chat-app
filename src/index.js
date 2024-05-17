@@ -1,13 +1,11 @@
 import express from 'express'
-import mongoose from 'mongoose'
 import env from 'dotenv'
+import * as db from './config/dbConfig'
 import userRouter from '../src/routes/user.route'
 env.config()
 const app = express()
 
-mongoose.connect(process.env.MONG0)
-    .then((db) => console.log('Mongodb connected'))
-    .catch(error => console.log(error.message))
+db.dbConnection();
 
 app.use(express.json())
 app.use('/api', userRouter)
