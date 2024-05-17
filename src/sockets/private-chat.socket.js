@@ -1,4 +1,4 @@
-import { saveUserMessage } from '../utils/user-message.utils'
+import { saveUserMessage } from '../utils/private-message.utils'
 const user = {}
 export const privateMessage = (socket) => {
     const userId = socket.handshake.query.userId
@@ -14,10 +14,11 @@ export const privateMessage = (socket) => {
     }
 
     socket.on('chat', async (msg) => {
-        const { receiver_id, message } = msg
-        const response = await saveUserMessage(userId, receiver_id, message)
+        const { userName, receiverId, content } = msg
+
+        const response = await saveUserMessage(userName, userId, receiverId, content)
         if (response) {
-            socket.to(user[receiver_id]).emit('rechat', message)
+            socket.to(user[receiverId]).emit('rechat', msg)
             console.log(msg)
         }
         else {

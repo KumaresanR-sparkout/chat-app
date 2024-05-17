@@ -10,7 +10,6 @@ const groupSchema = new mongoose.Schema({
         type: Date,
         default: new Date()
     }
-
 })
 
 export default mongoose.model('Groups', groupSchema)

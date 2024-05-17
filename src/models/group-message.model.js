@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const groupUserSchema = new mongoose.Schema({
+const groupMessageSchema = new mongoose.Schema({
     group_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Groups'
@@ -20,4 +20,4 @@ const groupUserSchema = new mongoose.Schema({
     }
 })
 
-export default mongoose.model('Groupusers', groupUserSchema)
+export default mongoose.model('groupMessage', groupMessageSchema)
