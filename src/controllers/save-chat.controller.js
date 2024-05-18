@@ -1,6 +1,8 @@
+import GroupMessage from '../models/group-message.model'
 import Chats from '../models/chat.model'
 import Message from '../models/message.model'
-export const saveUserMessage = async (userName, senderId, receiverID, content) => {
+
+export const saveOneToOneMessage = async (userName, senderId, receiverID, content) => {
     try {
         const chatDetails = {
             "chat_name": userName,
@@ -22,6 +24,22 @@ export const saveUserMessage = async (userName, senderId, receiverID, content) =
     }
     catch (error) {
         console.log(error.message)
+        return false
+    }
+}
+
+export const saveGroupMessage = async (group_id, sender_id, message) => {
+    try {
+        const Message = {
+            "group_id": group_id,
+            "sender_id": sender_id,
+            "message": message
+        }
+        const _response = await new GroupMessage(Message).save()
+        console.log(_response)
+        return true
+    }
+    catch (error) {
         return false
     }
 }

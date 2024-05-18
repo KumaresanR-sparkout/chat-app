@@ -1,11 +1,25 @@
-import { privateMessage } from './private-chat.socket'
-import { groupMessage } from './grop-chat.socket'
+import * as chat from './chat.socket'
 
 export const commonSocket = (io) => {
 
+    io.use((socket, next) => {
+        const userId = socket.handshake.query.userId
+        socket.userId = userId
+        if (socket.userId) {
+            next()
+        }
+        else {
+            const err = new Error('userId is not defined')
+            next(err)
+        }
+    })
+
     io.on('connection', (socket) => {
-        console.log('connected-user-id-', socket.id)
-        groupMessage(socket)
-        privateMessage(socket)
+        console.log('socket-id:', socket.id)
+        console.log('userId:', socket.userId)
+        socket.join(socket.userId)
+        chat.privateMessage(socket)
+        chat.groupMessage(socket)
+
     })
 }
