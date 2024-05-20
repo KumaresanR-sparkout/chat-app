@@ -1,11 +1,12 @@
 import Message from '../models/message.model'
 import GroupMessage from '../models/group-message.model'
+import Chat from '../models/chat.model'
 import * as response from '../utils/response.util'
 
 export const privateMessage = async (req, res) => {
     try {
 
-        if (!req.query) {
+        if (Object.keys(req.query).length==0) {
             return response.sendError(res, 400, "bad request")
         }
         const array = [req.query.senderId, req.query.receiverId]
@@ -43,3 +44,56 @@ export const groupMessage = async (req, res) => {
         return response.sendError(res, 500, error.message)
     }
 }
+
+
+export const getMessageStatus = async (req, res) => {
+    try {
+        const isStatus = await Message.find({ seen_by: true })
+            .populate({ path: 'chat_ref' })
+
+        console.log(isStatus.length)
+        return response.sendSuccess(res, 200, "not seen message count has been fetched", { "not_seen": isStatus.length })
+    }
+    catch (error) {
+        return response.sendError(res, 500, error.message)
+    }
+}
+
+
+//@description  Update seen_status based on sender and receiver
+//@route        Fetch /api/message-status
+//@acess        nill
+
+export const updateMessageStatus = async (req, res) => {
+
+    try {
+        
+        if (Object.keys(req.query).length==0) {
+            return response.sendError(res, 400, "bad request")
+        }
+
+        const isStatus = await Message.find({ sender_id: req.query.senderId,seen_by:false })
+            .populate({ path: 'chat_ref', match: { users: { $in: [req.query.senderId, req.query.receiverId] } } })
+        isStatus.map((status) => {
+            status.seen_by = true
+            status.save()
+        })
+
+        //@description  Update seen_status based on sender and receiver using sub-query method
+        
+        // const Status = await Message.updateMany({
+        //     _id: {
+        //         $in: await Message.find({}, { _id: 1 })
+        //             .populate({ path: 'chat_ref', match: { users: { $in: ['66471e7c9fa50773ae8b164a', '66471e3b9fa50773ae8b1647'] } } })
+
+        //     }, sender_id: '66471e3b9fa50773ae8b1647'
+        // }, { $set: { seen_by: true } }, { new: true })
+
+        return response.sendSuccess(res, 200, "message status has been updated", isStatus)
+
+    }
+    catch (error) {
+        return response.sendError(res, 500, error.message)
+    }
+}
+

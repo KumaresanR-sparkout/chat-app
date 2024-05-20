@@ -10,6 +10,8 @@ router.post('/register', validate.registerUserValidation, userControll.registerU
 router.get('/login', userControll.loginUser)
 router.get('/messsage/', message.privateMessage)
 router.get('/group-messsage/:id', message.groupMessage)
+router.patch('/message-status',message.updateMessageStatus)
+router.get('/message-count',message.getMessageStatus)
 // router.get('/group',async(req,res)=>{
 //     const t=await new Group().save()
 //     console.log(t)

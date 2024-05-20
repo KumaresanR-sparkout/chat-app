@@ -2,6 +2,7 @@ import express from 'express'
 import env from 'dotenv'
 import * as db from './config/dbConfig'
 import userRouter from '../src/routes/user.route'
+
 env.config()
 const app = express()
 

@@ -1,4 +1,3 @@
-import { required } from 'joi'
 import mongoose from 'mongoose'
 const chatSchema = new mongoose.Schema({
     chat_name: {

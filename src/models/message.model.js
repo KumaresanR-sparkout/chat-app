@@ -12,6 +12,10 @@ const messageSchema = new mongoose.Schema({
     chat_ref: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Chats'
+    },
+    seen_by: {
+        type: Boolean,
+        default: false
     }
 },
     {
