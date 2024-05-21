@@ -1,7 +1,15 @@
 import mongoose from 'mongoose'
 
 const messageSchema = new mongoose.Schema({
+    chat_name:{
+       type:String,
+       required:true 
+    },
     sender_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
+    },
+    receiver_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users'
     },
@@ -9,18 +17,14 @@ const messageSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-    chat_ref: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Chats'
-    },
     seen_by: {
         type: Boolean,
         default: false
     }
 },
-    {
-        timestamps: true
-    }
+{
+    timestamps:true
+}
 )
 
 export default mongoose.model('Message', messageSchema)

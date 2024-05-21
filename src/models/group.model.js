@@ -6,10 +6,14 @@ const groupSchema = new mongoose.Schema({
         trim: true,
         default: 'lik'
     },
-    date: {
-        type: Date,
-        default: new Date()
+    users: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
+    }]
+},
+    {
+        timestamps: true
     }
-})
+)
 
 export default mongoose.model('Groups', groupSchema)

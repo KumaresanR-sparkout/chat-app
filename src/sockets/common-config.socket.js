@@ -20,6 +20,5 @@ export const commonSocket = (io) => {
         socket.join(socket.userId)
         chat.privateMessage(socket)
         chat.groupMessage(socket)
-
     })
 }

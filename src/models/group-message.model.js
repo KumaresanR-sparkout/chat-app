@@ -14,10 +14,14 @@ const groupMessageSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
-    createdAt: {
-        type: Date,
-        default: new Date()
+    seen_by: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
+    }]
+},
+    {
+        timestamps: true
     }
-})
+)
 
 export default mongoose.model('groupMessage', groupMessageSchema)

@@ -1,4 +1,5 @@
 import * as saveChat from '../controllers/save-chat.controller'
+import {fetchArrayOfuser} from '../controllers/group.controller'
 
 export const privateMessage = (socket) => {
 
@@ -19,6 +20,8 @@ export const privateMessage = (socket) => {
 export const groupMessage = async (socket) => {
     const groupKey = socket.handshake.headers['x-group-key']
     console.log(groupKey)
+    const user=await fetchArrayOfuser(groupKey)
+    // console.log(user)
     socket.join(groupKey)
     socket.on('groupChat', async (msg) => {
         const response = await saveChat.saveGroupMessage(groupKey, socket.userId, msg.message)
