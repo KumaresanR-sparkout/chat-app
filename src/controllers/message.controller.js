@@ -129,19 +129,6 @@ export const getMessageStatus = async (req, res) => {
         ])
         return response.sendSuccess(res, 200, "not seen message count has been fetched", message)
 
-    
-        // const status = {}
-        // isStatus.forEach((data => {
-        //     if (status[data.sender_id.toString()]) {
-        //         status[data.sender_id.toString()]['unread_count']++
-        //         status[data.sender_id.toString()]['content'] = data.content
-        //     }
-        //     else {
-
-        //         status[data.sender_id.toString()] = { sender_id: data.sender_id.toString(), content: data.content, unread_count: 1 }
-        //     }
-        // }))
-        //console.log(isStatus)
     }
     catch (error) {
         return response.sendError(res, 500, error.message)
@@ -193,4 +180,5 @@ export const updateMessageStatus = async (req, res) => {
         return response.sendError(res, 500, error.message)
     }
 }
+
 

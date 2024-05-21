@@ -8,12 +8,27 @@ import GroupMessage from "../models/group-message.model"
 const router = express.Router()
 
 router.post('/register', validate.registerUserValidation, userControll.registerUser)
+
 router.get('/login', userControll.loginUser)
 router.get('/message', message.privateMessage)
 router.get('/message-count',message.getMessageStatus)
+router.get('/group-messsage/:id', message.groupMessage)
+
 router.patch('/add-group-user',group.addGroupUser)
 router.patch('/message-status',message.updateMessageStatus)
-router.get('/group-messsage/:id', message.groupMessage)
+router.patch('/group-status',group.updategroupStatus)
+
+
+
+
+
+
+
+
+
+
+
+
 //router.get('/groupuser',group.fetchArrayOfuser)
 // router.get('/group',async(req,res)=>{
 //     const t=await GroupMessage.find()
