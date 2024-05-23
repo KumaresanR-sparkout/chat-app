@@ -1,6 +1,8 @@
 import GroupMessage from '../models/group-message.model'
 import Message from '../models/message.model'
 
+//@description  creating one to one chats
+//@route        nill
 export const saveOneToOneMessage = async (userName, senderId, receiverID, content) => {
     try {
         const messageDetails = {
@@ -20,6 +22,8 @@ export const saveOneToOneMessage = async (userName, senderId, receiverID, conten
     }
 }
 
+//@description  creating group chats
+//@route        nill
 export const saveGroupMessage = async (group_id, sender_id, message) => {
     try {
         const Message = {
