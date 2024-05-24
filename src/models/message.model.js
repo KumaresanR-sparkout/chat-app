@@ -1,9 +1,10 @@
 import mongoose from 'mongoose'
 
+//@description  creating message schema
 const messageSchema = new mongoose.Schema({
-    chat_name:{
-       type:String,
-       required:true 
+    chat_name: {
+        type: String,
+        required: true
     },
     sender_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,9 +23,9 @@ const messageSchema = new mongoose.Schema({
         default: false
     }
 },
-{
-    timestamps:true
-}
+    {
+        timestamps: true
+    }
 )
 
 export default mongoose.model('Message', messageSchema)

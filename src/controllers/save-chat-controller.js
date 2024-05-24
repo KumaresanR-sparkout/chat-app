@@ -26,7 +26,7 @@ export const saveOneToOneMessage = async (userName, senderId, receiverID, conten
 //@route        nill
 export const saveGroupMessage = async (group_id, sender_id, message) => {
     try {
-        const Message = {
+        const Message = { 
             "group_id": group_id,
             "sender_id": sender_id,
             "message": message

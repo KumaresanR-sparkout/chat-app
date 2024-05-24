@@ -1,7 +1,8 @@
-import * as chat from './chat.socket'
+import * as chat from './chat-socket'
+import { connectedSocketUsers } from './middlewares/connected-socket-users'
 
+//@description  middleware for socket and connecting the users
 export const commonSocket = (io) => {
-
     io.use((socket, next) => {
         const userId = socket.handshake.query.userId
         socket.userId = userId
@@ -16,9 +17,10 @@ export const commonSocket = (io) => {
 
     io.on('connection', (socket) => {
         console.log('socket-id:', socket.id)
-        console.log('userId:', socket.userId)
         socket.join(socket.userId)
+        connectedSocketUsers(socket.userId)
         chat.privateMessage(socket)
-        chat.groupMessage(socket)
+        chat.groupMessage(io,socket)
+        console.log('connected userId in socket:', socket.userId)
     })
 }

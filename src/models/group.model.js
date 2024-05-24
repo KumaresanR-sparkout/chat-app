@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 
+//@description  creating group schema
 const groupSchema = new mongoose.Schema({
     group_name: {
         type: String,

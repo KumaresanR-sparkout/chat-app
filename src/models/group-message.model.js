@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 
+//@description  creating group message schema
 const groupMessageSchema = new mongoose.Schema({
     group_id: {
         type: mongoose.Schema.Types.ObjectId,

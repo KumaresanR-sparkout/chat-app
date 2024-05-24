@@ -1,11 +1,11 @@
 import User from '../models/user.model'
-import * as response from '../utils/response.util'
+import * as jwtToken from '../tokens/jwt-token'
+import * as response from '../utils/response-util'
 
+//@description  creating register function
+//@route        POST/api/chat/user
 export const registerUser = async (req, res) => {
     try {
-        if (Object.keys(req.body).length == 0) {
-            return response.sendError(res, 404, "no content found to register")
-        }
         const { user_name, email, password } = req.body
         const existingUser = await User.findOne({ "user_name": user_name, "email": email })
         if (existingUser) {
@@ -14,7 +14,7 @@ export const registerUser = async (req, res) => {
 
         const _response = await new User(req.body).save()
 
-        return response.sendSuccess(res, 200, "user added", _response)
+        return response.sendSuccess(res, 201, "user added", _response)
 
     }
     catch (error) {
@@ -22,11 +22,10 @@ export const registerUser = async (req, res) => {
     }
 }
 
+//@description  creating login function
+//@route        GET/api/chat/user
 export const loginUser = async (req, res) => {
     try {
-        if (Object.keys(req.body).length == 0) {
-            return response.sendError(res, 404, "no content found please send credientials")
-        }
         const { email, password } = req.body
         console.log(email)
 
@@ -35,7 +34,14 @@ export const loginUser = async (req, res) => {
         if ((existingUser.email != email) || (existingUser.password != password)) {
             return response.sendError(res, 401, "use valid login credientials")
         }
-        return response.sendSuccess(res, 200, "successfully login", existingUser)
+        const userToken = await jwtToken.generateToken({
+            "jwt": "jwtToken"
+        })
+        const sendUserDetails = {
+            "email": existingUser.email,
+            "token": userToken
+        }
+        return response.sendSuccess(res, 200, "successfully login", sendUserDetails)
 
     }
     catch (error) {
@@ -44,18 +50,13 @@ export const loginUser = async (req, res) => {
 
 }
 
+//@description  creating update function
+//@route        PATCH/api/chat/user
+//@acess        protected
 export const updateUser = async (req, res) => {
     try {
         const { userId } = req.query
-        if (!userId) {
-            response.sendError(res, 400, 'please send userId to delete')
-        }
-
-        if (Object.keys(req.body).length == 0) {
-            return response.sendError(res, 400, 'no body content find to update')
-        }
-
-        const updatedUser = await User.findByIdAndUpdate(userId, {
+        const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
             new: true
         })
 
@@ -69,6 +70,9 @@ export const updateUser = async (req, res) => {
     }
 }
 
+//@description  delete login function
+//@route        DELETE /api/chat/user
+//@acess        protected
 export const deleteUser = async (req, res) => {
     try {
         const { userId } = req.query

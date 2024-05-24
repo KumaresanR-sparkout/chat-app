@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 
+//@description  creating user schema
 const userSchema = new mongoose.Schema({
     user_name: {
         type: String,

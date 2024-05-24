@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
     "serve": "nodemon --exec babel-node src/server.js",
     "start": "nodemon src/server.js"
   },
@@ -18,12 +18,14 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.4",
     "nodemon": "^3.1.0",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "supertest": "^7.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.5",
     "@babel/core": "^7.24.5",
     "@babel/node": "^7.23.9",
-    "@babel/preset-env": "^7.24.5"
+    "@babel/preset-env": "^7.24.5",
+    "jest": "^29.7.0"
   }
 }

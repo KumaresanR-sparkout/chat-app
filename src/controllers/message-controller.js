@@ -1,10 +1,11 @@
 import Message from '../models/message.model'
 import GroupMessage from '../models/group-message.model'
 import mongoose from 'mongoose'
-import * as response from '../utils/response.util'
+import * as response from '../utils/response-util'
 
 //@description  Getting private chat lists
-//@route        GET /api/message    
+//@route        GET /apichat/private-chat
+//@acess        Protected  
 export const privateMessage = async (req, res) => {
     try {
 
@@ -31,7 +32,7 @@ export const privateMessage = async (req, res) => {
             ]
         })
         console.log(message)
-        return response.sendSuccess(res, 200, "data fetched by userId", message)
+        return response.sendSuccess(res, 200, "one-to-one chat list", message)
     }
     catch (error) {
         return response.sendError(res, 500, error.message)
@@ -39,7 +40,8 @@ export const privateMessage = async (req, res) => {
 }
 
 //@description  Getting indivaidual group chats
-//@route        GET /api/group-messsage/:id 
+//@route        GET /api/chat/group-chat/:id
+//@acess        Protected
 export const groupChatsBasedOnGroupId = async (req, res) => {
     try {
 
@@ -47,13 +49,18 @@ export const groupChatsBasedOnGroupId = async (req, res) => {
             return response.sendError(res, 400, "bad request")
         }
 
+        const isExist = await GroupMessage.findOne({
+            group_id: req.params.id
+        })
+        if (!isExist) {
+            return response.sendError(res, 401, 'provide valid groupKey')
+        }
         const message = await GroupMessage.find()
             .populate({ path: 'group_id', select: { "__v": 0 } })
             .populate({ path: 'sender_id', select: { 'user_name': 1 }, options: { strictPopulate: false } })
-            .then(data => data.filter(data => data.group_id._id == req.params.id))
-
-        console.log(message)
-        return response.sendSuccess(res, 200, "data fetched by the group based on users", message)
+            .then(data => data.filter(data => data.group_id._id.toString() == req.params.id))
+        // console.log(message)
+        return response.sendSuccess(res, 200, "data fetched by the group based on key", message)
     }
     catch (error) {
         return response.sendError(res, 500, error.message)
@@ -61,9 +68,14 @@ export const groupChatsBasedOnGroupId = async (req, res) => {
 }
 
 //@description  get unseen messsage count  based on sender and receiver
-//@route        GET /api/user-chat-details
+//@route        GET /api/chat/user-chat
+//@acess        Protected
 export const getUserBasedMessageDetails = async (req, res) => {
     try {
+
+        if (Object.keys(req.query).length == 0) {
+            return response.sendError(res, 404, "pass id to get your chat")
+        }
         const userId = new mongoose.Types.ObjectId(req.query.userId)
         const userChatDetails = await Message.aggregate([
             {
@@ -209,14 +221,11 @@ export const getUserBasedMessageDetails = async (req, res) => {
 
 
 //@description  Update seen_status based on sender and receiver
-//@route        FETCH /api/message-status
+//@route        FETCH /api/chat/private-status
+//@acess        Protected
 export const updateMessageStatus = async (req, res) => {
 
     try {
-
-        if (Object.keys(req.query).length == 0) {
-            return response.sendError(res, 400, "bad request")
-        }
 
         const { senderId, receiverId } = req.query
 
@@ -251,12 +260,15 @@ export const updateMessageStatus = async (req, res) => {
     }
 }
 
-//@description  List group-chat 
-//@route        GET /api/user-chat-details-loop'
-//@acess        nill
-
+//@description  get unseen messsage count  based on sender and receiver-(using loop method) 
+//@route        GET /api/chat/user-chat-loop'
+//@acess        Protected
 export const getUserBasedMessageDetailsUsingLoop = async (req, res) => {
     try {
+
+        if (Object.keys(req.query).length == 0) {
+            return response.sendError(res, 404, "pass id to get your chat")
+        }
         const { userId } = req.query
         const userChatDetails = await Message.find({
             $or: [
@@ -282,7 +294,7 @@ export const getUserBasedMessageDetailsUsingLoop = async (req, res) => {
             }
 
         })
-        console.log(userDetails)
+        //console.log(userDetails)
 
         const userGroupChatDetails = await GroupMessage.find().sort({ createdAt: 1 }).populate({
             path: 'group_id', match: {
@@ -311,12 +323,12 @@ export const getUserBasedMessageDetailsUsingLoop = async (req, res) => {
             }
         })
 
-        console.log(groupUserDetails)
+        //console.log(groupUserDetails)
         const listUserChats = [...Object.values(userDetails), ...Object.values(groupUserDetails)]
         listUserChats.sort((a, b) => {
             return b.createdAt - a.createdAt
         })
-        return response.sendSuccess(res, 200, 'group-list', listUserChats)
+        return response.sendSuccess(res, 200, 'last send message and unread count data', listUserChats)
     }
     catch (error) {
         return response.sendError(res, 500, error.message)

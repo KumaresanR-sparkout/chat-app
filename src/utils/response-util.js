@@ -1,3 +1,4 @@
+//@description  Sending success response function
 export const sendSuccess=(res,status_code,message,data)=>{
     const response={
         "status_code":status_code,
@@ -8,6 +9,7 @@ export const sendSuccess=(res,status_code,message,data)=>{
     res.status(status_code).json(response)
 }
 
+//@description  sending error response function
 export const sendError=(res,status_code,message)=>{
     const response={
         "status_code":status_code,
