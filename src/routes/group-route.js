@@ -15,5 +15,6 @@ router.patch('/group-user', jwtToken.verifyToken, validation.addGroupUserValidat
 router.patch('/group-status', jwtToken.verifyToken, validation.updategroupStatusValidation, groupControll.updategroupStatus)
 
 //@DELETE
+router.delete('/group',jwtToken.verifyToken,groupControll.deleteGroup)
 
 export default router

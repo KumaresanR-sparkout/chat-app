@@ -12,9 +12,9 @@ export const registerUser = async (req, res) => {
             return response.sendError(res, 400, "user already exist")
         }
 
-        const _response = await new User(req.body).save()
+        const saveResponse = await new User(req.body).save()
 
-        return response.sendSuccess(res, 201, "user added", _response)
+        return response.sendSuccess(res, 201, "user added", [saveResponse])
 
     }
     catch (error) {
@@ -30,18 +30,22 @@ export const loginUser = async (req, res) => {
         console.log(email)
 
         const existingUser = await User.findOne({ "email": email })
+        if(!existingUser){
+            return response.sendError(res, 400, "In valid email")
+        }
 
-        if ((existingUser.email != email) || (existingUser.password != password)) {
-            return response.sendError(res, 401, "use valid login credientials")
+        if (existingUser.password != password) {
+            return response.sendError(res, 401, "In valid password")
         }
         const userToken = await jwtToken.generateToken({
             "jwt": "jwtToken"
         })
         const sendUserDetails = {
+            "userId":existingUser._id,
             "email": existingUser.email,
             "token": userToken
         }
-        return response.sendSuccess(res, 200, "successfully login", sendUserDetails)
+        return response.sendSuccess(res, 200, "successfully login", [sendUserDetails])
 
     }
     catch (error) {
@@ -63,7 +67,7 @@ export const updateUser = async (req, res) => {
         if (!updatedUser) {
             return response.sendError(res, 401, 'you are not the user to update the details')
         }
-        return response.sendSuccess(res, 201, 'updated your details', updatedUser)
+        return response.sendSuccess(res, 201, 'updated your details', [updatedUser])
     }
     catch (error) {
         return response.sendError(res, 500, error.message)
@@ -80,6 +84,7 @@ export const deleteUser = async (req, res) => {
             return response.sendError(res, 400, 'please send userId to delete')
         }
         const deleteUser = await User.findByIdAndDelete(userId)
+        console.log(deleteUser)
         if (!deleteUser) {
             return response.sendError(res, 401, 'you are not the user to delete the details')
         }

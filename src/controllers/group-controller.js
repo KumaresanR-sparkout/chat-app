@@ -5,7 +5,7 @@ import * as response from '../utils/response-util'
 //@description  Fetching all users id
 //@route        nill
 export const fetchArrayOfuser = async (groupKey) => {
-    const groupUser = await Groups.findOne({_id:groupKey},{users:1})
+    const groupUser = await Groups.findOne({ _id: groupKey }, { users: 1 })
     return groupUser.users
     console.log(groupUser)
 }
@@ -15,13 +15,13 @@ export const fetchArrayOfuser = async (groupKey) => {
 //@acess        protected
 export const createGroup = async (req, res) => {
     try {
-        const isExist=await Groups.findOne({group_name:req.body.group_name})
-        if(isExist){
-            return response.sendError(res,401,'already group has been created')
+        const isExist = await Groups.findOne({ group_name: req.body.group_name })
+        if (isExist) {
+            return response.sendError(res, 401, 'already group has been created')
         }
         const createGroup = await new Groups(req.body).save()
         console.log(createGroup)
-        return response.sendSuccess(res, 201, 'created group', createGroup)
+        return response.sendSuccess(res, 201, 'created group', [createGroup])
     }
     catch (error) {
         return response.sendError(res, 500, error.message)
@@ -34,7 +34,8 @@ export const createGroup = async (req, res) => {
 export const addGroupUser = async (req, res) => {
     try {
         const { groupId, userId } = req.body
-        const isExist = await Groups.findOne({_id:groupId,
+        const isExist = await Groups.findOne({
+            _id: groupId,
             users: userId
         })
         if (isExist) {
@@ -58,9 +59,9 @@ export const addGroupUser = async (req, res) => {
 export const updategroupStatus = async (req, res) => {
     try {
         const { senderId, groupId, users } = req.body
-        const isExist=await GroupMessage.findOne({group_id:groupId,sender_id:senderId})
-        if(!isExist){
-            return response.sendError(res,401,'you are not allowed to update the seen status')
+        const isExist = await GroupMessage.findOne({ group_id: groupId, sender_id: senderId })
+        if (!isExist) {
+            return response.sendError(res, 401, 'you are not allowed to update the seen status')
         }
         const updatedStatus = await GroupMessage.updateMany({ group_id: groupId, sender_id: senderId }, {
             $addToSet: {
@@ -70,6 +71,24 @@ export const updategroupStatus = async (req, res) => {
             }
         })
         return response.sendSuccess(res, 201, 'updated seen-users array', updatedStatus)
+    }
+    catch (error) {
+        return response.sendError(res, 500, error.message)
+    }
+}
+
+export const deleteGroup = async (req, res) => {
+    try {
+        const { groupId } = req.query
+        if (!groupId) {
+            return response.sendError(res, 400, 'please send groupId to delete')
+        }
+        const deleteGroup = await Groups.findByIdAndDelete(groupId)
+        console.log(deleteGroup)
+        if (!deleteGroup) {
+            return response.sendError(res, 401, 'you are not the user to delete the group')
+        }
+        return response.sendSuccess(res, 200, 'deleted group', deleteGroup)
     }
     catch (error) {
         return response.sendError(res, 500, error.message)

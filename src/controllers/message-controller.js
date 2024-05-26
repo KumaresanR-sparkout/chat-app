@@ -23,7 +23,7 @@ export const privateMessage = async (req, res) => {
                     ]
                 },
                 {
-                    $or: [
+                    $and: [
                         { sender_id: receiverId },
                         { receiver_id: senderId }
                     ]
