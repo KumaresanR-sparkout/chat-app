@@ -77,6 +77,9 @@ export const updategroupStatus = async (req, res) => {
     }
 }
 
+//@description  Deleting Group
+//@route        PATCH/api/chat/group
+//@acess        protected
 export const deleteGroup = async (req, res) => {
     try {
         const { groupId } = req.query
