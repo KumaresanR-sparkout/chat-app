@@ -4,7 +4,7 @@ import * as jwtToken from '../tokens/jwt-token'
 import * as validate from '../validations/user-validation'
 
 const router = express.Router()
-router.use(express.json())
+
 //validate.registerUserValidation
 //@POST
 router.post('/user',validate.registerUserValidation,userControll.registerUser)
